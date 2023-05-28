@@ -1,11 +1,17 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
+import 'package:cecasem_nutricion_app/app/presentation/global/controllers/session_controller.dart';
+import 'package:cecasem_nutricion_app/app/utils/dialogs/progress_dialog.dart';
 
 class HomeController extends SimpleNotifier {
-  int _counter = 0;
-  int get counter => _counter;
+  final SessionController _sessionController;
+  HomeController(
+    this._sessionController,
+  );
 
-  void increment() {
-    _counter++;
+  void logOut(BuildContext context) {
+    ProgressDialog.show(context);
+    _sessionController.signOut();
     notify();
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cecasem_nutricion_app/app/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/ui.dart';
 
@@ -9,19 +10,31 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Center(
         child: Consumer(
           builder: (_, ref, __) {
             final controller = ref.watch(homeProvider);
-            return Text("${controller.counter}");
+            return Center(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Cecasem'),
+                    MaterialButton(
+                      color: AppColors.mainColor,
+                      onPressed: () {
+                        controller.logOut(context);
+                      },
+                      child: Icon(
+                        Icons.logout,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ]),
+            );
           },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: homeProvider.read.increment,
-        child: const Icon(Icons.add),
       ),
     );
   }
 }
-  
