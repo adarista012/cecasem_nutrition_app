@@ -1,5 +1,6 @@
 import 'package:cecasem_nutricion_app/app/presentation/modules/login/controller/login_provider.dart';
 import 'package:cecasem_nutricion_app/app/utils/app_colors.dart';
+import 'package:cecasem_nutricion_app/app/utils/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/ui.dart';
 
@@ -18,7 +19,7 @@ class LoginView extends StatelessWidget {
               child: Container(
                 alignment: Alignment.bottomCenter,
                 padding: const EdgeInsets.all(45.0),
-                child: Image.asset('images/logo.png'),
+                child: Image.asset(AppConstants.logoAssetRoute),
               ),
             ),
             Flexible(
@@ -35,9 +36,9 @@ class LoginView extends StatelessWidget {
                         onChanged: loginProvider.read.onEmailChanged,
                         decoration: InputDecoration(
                           errorText: loginProvider.read.emailError
-                              ? 'El email es inválido'
+                              ? AppConstants.invalidEmail
                               : null,
-                          labelText: 'Email',
+                          labelText: AppConstants.email,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16.0),
                             borderSide: BorderSide(
@@ -53,9 +54,9 @@ class LoginView extends StatelessWidget {
                         obscureText: true,
                         decoration: InputDecoration(
                           errorText: loginProvider.read.passwordError
-                              ? 'La contraseña debe tener más de cinco caracteres'
+                              ? AppConstants.passwordMustBe
                               : null,
-                          labelText: 'Contraseña',
+                          labelText: AppConstants.password,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16.0),
                           ),
@@ -77,7 +78,7 @@ class LoginView extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16.0)),
                             child: Text(
-                              'Ingresar',
+                              AppConstants.login,
                               style: TextStyle(
                                   color: AppColors.white, fontSize: 20.0),
                             ),

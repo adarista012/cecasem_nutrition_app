@@ -1,3 +1,4 @@
+import 'package:cecasem_nutricion_app/app/utils/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/ui.dart';
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       key: router.appKey,
-      title: 'Cecasem Nutrición',
+      title: AppConstants.kNameToTheApp,
       debugShowCheckedModeBanner: false,
       navigatorKey: router.navigatorKey,
       navigatorObservers: [

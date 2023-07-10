@@ -20,4 +20,9 @@ class AppColors {
   static Color white = Colors.white;
   static Color red = Colors.red;
   static Color grey = Colors.grey;
+  static Color transparent = Colors.transparent;
+  static Color blue = const Color.fromARGB(255, 30, 50, 80);
+  static Color yellow = Colors.yellow.shade600;
+  static Color greenCheck = Colors.green;
+  static Color amber = Colors.amber;
 }
