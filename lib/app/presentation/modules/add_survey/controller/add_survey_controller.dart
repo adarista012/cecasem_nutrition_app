@@ -1,12 +1,15 @@
+import 'package:cecasem_nutricion_app/app/domain/repositories/authentication_repository.dart';
 import 'package:cecasem_nutricion_app/app/utils/app_colors.dart';
 import 'package:cecasem_nutricion_app/app/utils/app_constants.dart';
 import 'package:cecasem_nutricion_app/precentil_list.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 import '../../../../domain/repositories/firebase_repository.dart';
 
 class AddSurveyController extends SimpleNotifier {
   final _firebaseRepository = Get.find<FirebaseRepository>();
+  final AuthenticationRepository _auth = Get.find();
   static const List<int> _listMonths = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
   static const List<int> _listYears = [
     0,
@@ -25,7 +28,7 @@ class AddSurveyController extends SimpleNotifier {
   ];
   static final List<String> _listSex = [AppConstants.male, AppConstants.female];
   static const List<String> _listDiagnosis = <String>[
-    'Bajo peso',
+    'Desnutrición',
     'Peso saludable',
     'Sobrepeso',
     'Obesidad'
@@ -51,14 +54,16 @@ class AddSurveyController extends SimpleNotifier {
   String? _error;
   String? _imc;
   String? _nutritionalDiagnosis;
+  String? _comunity;
   bool? _nutritionalDiagnosisWrong = false;
   bool? _isLoading = false;
   Color _nutritionalDiagnosisColor = AppColors.grey;
+  final List<String> _listOfComunitys = [];
 
   final DateTime _dateTime = DateTime.now();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _comunityController = TextEditingController();
+  // final TextEditingController _comunityController = TextEditingController();
   final TextEditingController _ageController = TextEditingController(text: '0');
   final TextEditingController _monthsController =
       TextEditingController(text: '0');
@@ -67,7 +72,7 @@ class AddSurveyController extends SimpleNotifier {
   TextEditingController get nameController => _nameController;
   TextEditingController get lastNameController => _lastNameController;
   TextEditingController get ageController => _ageController;
-  TextEditingController get comunityController => _comunityController;
+  // TextEditingController get comunityController => _comunityController;
   TextEditingController get monthsController => _monthsController;
   TextEditingController get weightController => _weightController;
   TextEditingController get heigthController => _heigthController;
@@ -81,9 +86,29 @@ class AddSurveyController extends SimpleNotifier {
   Color? get nutritionalDiagnosisColor => _nutritionalDiagnosisColor;
   bool? get nutritionalDiagnosisWrong => _nutritionalDiagnosisWrong;
   bool? get isLoading => _isLoading;
+  String? get comunity => _comunity;
   String? get sex => _sex;
   int? get months => _months;
   int? get years => _years;
+  List<String> get listOfComunitys => _listOfComunitys;
+
+  AddSurveyController() {
+    _init();
+  }
+
+  void _init() async {
+    _isLoading = true;
+    _listOfComunitys.clear();
+
+    final firebaseinstance = FirebaseFirestore.instance.collection(
+      'comunitys',
+    );
+    await firebaseinstance.get().then((value) {
+      _listOfComunitys.addAll(value.docs.map((e) => e.data()['comunity']));
+    });
+    _isLoading = false;
+    notify();
+  }
 
   void calculateIMC() {
     double weight = editNumber(_weightController.value.text);
@@ -115,8 +140,8 @@ class AddSurveyController extends SimpleNotifier {
           }
         }
       } else {
-        print(totalMonths());
-        print(Precentil.listM[totalMonths()]);
+        // print(totalMonths());
+        // print(Precentil.listM[totalMonths()]);
         if (currentImc > Precentil.listM[totalMonths()].last) {
           _indexImcIndicator = Precentil.listM[totalMonths()].length - 1;
         }
@@ -161,6 +186,7 @@ class AddSurveyController extends SimpleNotifier {
   double editNumber(String value) {
     String valueW = value.replaceAll(RegExp(r','), '.');
     double val = double.parse(valueW);
+
     return val;
   }
 
@@ -194,11 +220,8 @@ class AddSurveyController extends SimpleNotifier {
   }
 
   void editSex(String? value) {
-    print(_sex);
-    print(value);
     _sex = value!;
-    print(value);
-    print(_sex);
+
     if (totalMonths() >= 0 &&
         _heigthController.value.text.isNotEmpty &&
         _weightController.value.text.isNotEmpty) {
@@ -210,6 +233,11 @@ class AddSurveyController extends SimpleNotifier {
 
   void editDiagnosis(String? value) {
     _nutritionalDiagnosis = value!;
+    notify();
+  }
+
+  void editComunity(String? value) {
+    _comunity = value;
     notify();
   }
 
@@ -259,9 +287,11 @@ class AddSurveyController extends SimpleNotifier {
     notify();
   }
 
-  void comunityChange(String? value) {
-    _error = null;
-    notify();
+  Future<String> getUserName() async {
+    var auth = await _auth.user;
+    String? name = auth!.displayName;
+    String? email = auth.email;
+    return email ?? name ?? 'Usuario sin nombre';
   }
 
   void sendSurvey(BuildContext _) async {
@@ -271,7 +301,7 @@ class AddSurveyController extends SimpleNotifier {
       _error = 'La talla debe ser mayor a cero';
     }
     if (_heigthController.value.text.isNotEmpty) {
-      double heigth = double.parse(_heigthController.value.text);
+      double heigth = editNumber(_heigthController.value.text);
       if (heigth <= 0) {
         _error = 'La talla debe ser mayor a cero';
       }
@@ -280,13 +310,12 @@ class AddSurveyController extends SimpleNotifier {
       _error = 'El peso debe ser mayor a cero';
     }
     if (_weightController.value.text.isNotEmpty) {
-      double weight = double.parse(_weightController.value.text);
+      double weight = editNumber(_weightController.value.text);
       if (weight <= 0) {
         _error = 'El peso debe ser mayor a cero';
       }
     }
-    if (comunityController.value.text == '' &&
-        comunityController.value.text.isEmpty) {
+    if (comunity == null) {
       _error = 'El campo comunidad no puede estar vacio';
     }
     if (lastNameController.value.text == '' &&
@@ -298,7 +327,7 @@ class AddSurveyController extends SimpleNotifier {
     }
     if (nameController.value.text.isNotEmpty &&
         lastNameController.value.text.isNotEmpty &&
-        comunityController.value.text.isNotEmpty &&
+        comunity != null &&
         _weightController.value.text.isNotEmpty &&
         _heigthController.value.text.isNotEmpty) {
       await _firebaseRepository.uploadSurvey(
@@ -306,14 +335,14 @@ class AddSurveyController extends SimpleNotifier {
         timeStamp: _dateTime.millisecondsSinceEpoch,
         name: _nameController.value.text,
         lastame: _lastNameController.value.text,
-        comunity: _comunityController.value.text,
+        comunity: _comunity ?? '',
         sex: _sex,
         months: totalMonths(),
-        weight: double.parse(_weightController.value.text),
-        heigth: double.parse(_heigthController.value.text),
+        weight: editNumber(_weightController.value.text),
+        heigth: editNumber(_heigthController.value.text),
         imc: double.parse(_imc!),
         nutricionalDiagnosis: _nutritionalDiagnosis!,
-        nutricionalDiagnosisIsWrong: nutritionalDiagnosisWrong!,
+        user: await getUserName(),
         context: _,
       );
     }

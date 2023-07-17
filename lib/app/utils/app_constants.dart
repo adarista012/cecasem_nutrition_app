@@ -21,8 +21,7 @@ class AppConstants {
   static const String kLabelImc = 'IMC';
   static const String kLabelNutricionalDiagnosis = 'Nutricional diagnosis';
   //
-  static const String kLabelNutricionalDiagnosisIsWrong =
-      'Nutricional diagnosis is wrong';
+  static const String kUser = 'User';
   static String headerCharts = 'Estadísticas';
   static String headerSurvey = 'Agregar encuesta';
   static String add = 'Agregar';
@@ -85,4 +84,7 @@ class AppConstants {
     AppConstants.titleDesnutrition,
     AppConstants.titleTotal,
   ];
+
+  //searcher
+  static const String searcher = 'Buscador';
 }

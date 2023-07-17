@@ -13,6 +13,9 @@ class MyForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (controller.isLoading == true) {
+      return const CircularProgressIndicator();
+    }
     return ListView(
       shrinkWrap: true,
       children: [
@@ -41,12 +44,63 @@ class MyForm extends StatelessWidget {
           label: AppConstants.lastName,
           myOnChangeFunction: controller.lastNameChange,
         ),
-        MyTextField(
-          controller: controller.comunityController,
-          isText: true,
-          isError: false,
-          label: AppConstants.comunity,
-          myOnChangeFunction: controller.comunityChange,
+        Padding(
+          padding: const EdgeInsets.only(
+            top: 4.0,
+            right: 2.0,
+            left: 2.0,
+            bottom: 4.0,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Container(
+                  height: 1.6,
+                  color: AppColors.mainColor,
+                ),
+              ),
+              Text(
+                ' ${AppConstants.comunity} ',
+                style: TextStyle(
+                  color: AppColors.mainColor,
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Container(
+                  height: 1.6,
+                  color: AppColors.mainColor,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          height: 58,
+          width: double.infinity,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              border: Border.all(
+                color: AppColors.mainColor,
+              ),
+              borderRadius: BorderRadius.circular(8.0)),
+          child: DropdownButton(
+            value: controller.comunity,
+            padding: const EdgeInsets.all(8.0),
+            elevation: 16,
+            underline: Container(
+              color: AppColors.transparent,
+            ),
+            items: controller.listOfComunitys
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value.toString()),
+              );
+            }).toList(),
+            onChanged: controller.editComunity,
+          ),
         ),
         Padding(
           padding: const EdgeInsets.only(
@@ -365,48 +419,48 @@ class MyForm extends StatelessWidget {
             onChanged: controller.editDiagnosis,
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 6.0,
-          ),
-          child: Row(
-            children: [
-              Text(
-                '${AppConstants.nutritionalDiagnosis}: ',
-                style: TextStyle(
-                  color: AppColors.mainColor,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-              ),
-              Text(
-                controller.nutritionalDiagnosis ?? '',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: controller.nutritionalDiagnosisColor,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Row(
-          children: [
-            Text(
-              '${AppConstants.nutritionalDiagnosisWrong}: ',
-              style: TextStyle(
-                color: AppColors.mainColor,
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-              ),
-            ),
-            Checkbox(
-              value: controller.nutritionalDiagnosisWrong,
-              checkColor: AppColors.white,
-              activeColor: AppColors.red,
-              onChanged: controller.checkBoxChange,
-            )
-          ],
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(
+        //     vertical: 6.0,
+        //   ),
+        //   child: Row(
+        //     children: [
+        //       Text(
+        //         '${AppConstants.nutritionalDiagnosis}: ',
+        //         style: TextStyle(
+        //           color: AppColors.mainColor,
+        //           fontWeight: FontWeight.w600,
+        //           fontSize: 16,
+        //         ),
+        //       ),
+        //       Text(
+        //         controller.nutritionalDiagnosis ?? '',
+        //         style: TextStyle(
+        //           fontSize: 16,
+        //           color: controller.nutritionalDiagnosisColor,
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        // Row(
+        //   children: [
+        //     Text(
+        //       '${AppConstants.nutritionalDiagnosisWrong}: ',
+        //       style: TextStyle(
+        //         color: AppColors.mainColor,
+        //         fontWeight: FontWeight.w600,
+        //         fontSize: 16,
+        //       ),
+        //     ),
+        //     Checkbox(
+        //       value: controller.nutritionalDiagnosisWrong,
+        //       checkColor: AppColors.white,
+        //       activeColor: AppColors.red,
+        //       onChanged: controller.checkBoxChange,
+        //     )
+        //   ],
+        // ),
         const SizedBox(
           height: 8.0,
         ),

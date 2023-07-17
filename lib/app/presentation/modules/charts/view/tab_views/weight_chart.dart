@@ -11,6 +11,7 @@ class WeightChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    controller.heightChart?.clear();
     return Column(
       children: [
         Expanded(
@@ -18,7 +19,6 @@ class WeightChart extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(top: 32.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   '${AppConstants.titleWeight} Promedio',
@@ -28,30 +28,51 @@ class WeightChart extends StatelessWidget {
                     fontSize: 24,
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Comunidad    ',
-                      style: TextStyle(
-                        color: AppColors.blue,
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        '${AppConstants.comunity}  ',
+                        style: TextStyle(
+                            color: AppColors.blue,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500),
                       ),
-                    ),
-                    MaterialButton(
-                      onPressed: () {
-                        controller.switchChart(
-                          AppConstants.titleWeight,
-                        );
-                      },
-                      minWidth: 20,
-                      height: 24,
-                      color: AppColors.mainColor,
-                      child: Icon(
-                        Icons.bar_chart_rounded,
-                        color: AppColors.white,
+                      Expanded(
+                        child: Container(
+                          height: 40,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: AppColors.blue,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          child: DropdownButton(
+                            value: controller.comunity,
+                            padding: const EdgeInsets.all(8.0),
+                            elevation: 16,
+                            underline: Container(
+                              color: AppColors.transparent,
+                            ),
+                            items: controller.listOfComunitys!
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value.toString()),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              controller.changeComunity(value!);
+                              controller.switchChart(
+                                AppConstants.titleWeight,
+                              );
+                            },
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -66,35 +87,38 @@ class WeightChart extends StatelessWidget {
                   ? controller.weigthChart == null ||
                           controller.weigthChart!.isEmpty
                       ? Text(
-                          '${AppConstants.titleWeight} Promedio',
+                          'Seleccionar ${AppConstants.comunity}',
                           style: TextStyle(
-                              color: AppColors.mainColor,
-                              fontWeight: FontWeight.bold),
+                            color: AppColors.blue,
+                            fontWeight: FontWeight.bold,
+                          ),
                         )
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: AspectRatio(
-                                aspectRatio: 1.6,
-                                child: BarChart(
-                                  BarChartData(
-                                      barTouchData: barTouchData,
-                                      titlesData: titlesData,
-                                      borderData: borderData,
-                                      barGroups: barGroups(),
-                                      gridData: const FlGridData(show: false),
-                                      // alignment: BarChartAlignment.spaceAround,
-                                      maxY: 80),
-                                ),
+                            Container(
+                              width: MediaQuery.of(context).size.width - 32,
+                              height: MediaQuery.of(context).size.width - 32,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: AppColors.blue,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: BarChart(
+                                BarChartData(
+                                    barTouchData: barTouchData,
+                                    titlesData: titlesData,
+                                    borderData: borderData,
+                                    barGroups: barGroups(),
+                                    gridData: const FlGridData(show: false),
+                                    // alignment: BarChartAlignment.spaceAround,
+                                    maxY: 80),
                               ),
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 24.0, top: 8.0),
+                              padding: const EdgeInsets.only(top: 8.0),
                               child: Text(
-                                'Peso en Kg.',
+                                'Promedio de los pesos en Kg.',
                                 style: TextStyle(
                                   color: AppColors.mainColor,
                                   fontWeight: FontWeight.bold,
@@ -103,8 +127,7 @@ class WeightChart extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 24.0, top: 8.0),
+                              padding: const EdgeInsets.only(top: 8.0),
                               child: Text(
                                 'Edad en años.',
                                 style: TextStyle(
@@ -135,7 +158,7 @@ List<BarChartGroupData>? barGroups() {
           BarChartRodData(
             toY: double.parse(chartsProvider.read.weigthChart![i].toString()),
             gradient: _barsGradient,
-            width: 45,
+            width: 56,
             borderRadius: BorderRadius.circular(4),
           )
         ],
@@ -179,25 +202,25 @@ FlTitlesData get titlesData => const FlTitlesData(
 Widget getTitles(double value, TitleMeta meta) {
   final style = TextStyle(
     color: AppColors.blue,
-    fontWeight: FontWeight.bold,
-    fontSize: 14,
+    // fontWeight: FontWeight.bold,
+    fontSize: 12,
   );
   String text;
   switch (value.toInt()) {
     case 0:
-      text = '0-2';
+      text = '0-2 años';
       break;
     case 1:
-      text = '3-5';
+      text = '3-5 años';
       break;
     case 2:
-      text = '6-8';
+      text = '6-8 años';
       break;
     case 3:
-      text = '9-10';
+      text = '9-10 años';
       break;
     case 4:
-      text = '11-12';
+      text = '11-12 años';
       break;
     default:
       text = '';
@@ -223,10 +246,10 @@ BarTouchData get barTouchData => BarTouchData(
           int rodIndex,
         ) {
           return BarTooltipItem(
-            rod.toY.round().toString(),
+            '${rod.toY.toStringAsFixed(2)} kg',
             TextStyle(
-              color: AppColors.mainColor,
-              fontWeight: FontWeight.bold,
+              color: AppColors.mainColor, fontSize: 12,
+              // fontWeight: FontWeight.bold,
             ),
           );
         },

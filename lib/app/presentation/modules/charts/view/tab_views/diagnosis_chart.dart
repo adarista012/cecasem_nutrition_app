@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cecasem_nutricion_app/app/presentation/modules/charts/controller/charts_controller.dart';
 import 'package:cecasem_nutricion_app/app/presentation/modules/charts/controller/charts_provider.dart';
 import 'package:cecasem_nutricion_app/app/utils/app_colors.dart';
@@ -32,6 +30,8 @@ class DiagnosisChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    controller.heightChart!.clear();
+    controller.weigthChart!.clear();
     return Column(
       children: [
         Expanded(
@@ -42,37 +42,58 @@ class DiagnosisChart extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  '${AppConstants.titleDiagnosis} Promedio',
+                  '${AppConstants.titleDiagnosis} nutricional',
                   style: TextStyle(
                     color: AppColors.mainColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Comunidad    ',
-                      style: TextStyle(
-                        color: AppColors.blue,
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        '${AppConstants.comunity}  ',
+                        style: TextStyle(
+                            color: AppColors.blue,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500),
                       ),
-                    ),
-                    MaterialButton(
-                      onPressed: () {
-                        controller.switchChart(
-                          AppConstants.titleDiagnosis,
-                        );
-                      },
-                      minWidth: 20,
-                      height: 24,
-                      color: AppColors.mainColor,
-                      child: Icon(
-                        Icons.bar_chart_rounded,
-                        color: AppColors.white,
+                      Expanded(
+                        child: Container(
+                          height: 40,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: AppColors.blue,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          child: DropdownButton(
+                            value: controller.comunity,
+                            padding: const EdgeInsets.all(8.0),
+                            elevation: 16,
+                            underline: Container(
+                              color: AppColors.transparent,
+                            ),
+                            items: controller.listOfComunitys!
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value.toString()),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              controller.changeComunity(value!);
+                              controller.switchChart(
+                                AppConstants.titleDiagnosis,
+                              );
+                            },
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -86,7 +107,7 @@ class DiagnosisChart extends StatelessWidget {
               child: !controller.isLoading
                   ? controller.xAxis == null && controller.yAxis == null
                       ? Text(
-                          '${AppConstants.titleDiagnosis} Promedio',
+                          'Seleccionar ${AppConstants.comunity}',
                           style: TextStyle(
                               color: AppColors.mainColor,
                               fontWeight: FontWeight.bold),
@@ -94,67 +115,104 @@ class DiagnosisChart extends StatelessWidget {
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(0.0),
-                              child: AspectRatio(
-                                aspectRatio: 1.6,
-                                child: Stack(
-                                  alignment: Alignment.centerRight,
-                                  children: [
-                                    Positioned(
+                            Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: AppColors.blue,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8)),
+                              width: MediaQuery.of(context).size.width - 32,
+                              height: MediaQuery.of(context).size.width - 32,
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    left: 16,
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width -
+                                          32,
+                                      height:
+                                          MediaQuery.of(context).size.width -
+                                              32,
+                                      child: BarChart(
+                                        BarChartData(
+                                            barTouchData: sbarTouchData,
+                                            titlesData: stitlesData,
+                                            borderData: borderData,
+                                            barGroups: barGroup(),
+                                            gridData:
+                                                const FlGridData(show: false),
+                                            maxY: 80),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: -16,
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width -
+                                          32,
+                                      height:
+                                          MediaQuery.of(context).size.width -
+                                              32,
                                       child: BarChart(
                                         BarChartData(
                                           barTouchData: barTouchData,
                                           titlesData: titlesData,
                                           borderData: borderData,
                                           barGroups: barGroups(),
+
                                           gridData:
                                               const FlGridData(show: false),
                                           // alignment: BarChartAlignment.spaceAround,
-                                          maxY: 200,
+                                          maxY: 80,
                                         ),
                                       ),
                                     ),
-                                    Positioned(
-                                      child: BarChart(
-                                        BarChartData(
-                                          barTouchData: sbarTouchData,
-                                          titlesData: FlTitlesData(show: false),
-                                          borderData: FlBorderData(show: false),
-                                          barGroups: barGroup(),
-                                          gridData:
-                                              const FlGridData(show: false),
-                                          // alignment: BarChartAlignment.spaceAround,
-                                          maxY: 200,
-                                        ),
-                                      ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 16,
+                                    height: 16,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(2),
+                                      color: AppColors.mainColor,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  Text(
+                                    ' Sin desnutrición',
+                                    style: TextStyle(
+                                      color: AppColors.mainColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 24.0, top: 8.0),
-                              child: Text(
-                                'Diagnóstico',
-                                style: TextStyle(
-                                  color: AppColors.mainColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 24.0, top: 8.0),
-                              child: Text(
-                                'Edad en años.',
-                                style: TextStyle(
-                                  color: AppColors.blue,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 16,
+                                    height: 16,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(2),
+                                      color: AppColors.blue,
+                                    ),
+                                  ),
+                                  Text(
+                                    ' Con desnutrición',
+                                    style: TextStyle(
+                                      color: AppColors.blue,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -170,15 +228,16 @@ class DiagnosisChart extends StatelessWidget {
 
 List<BarChartGroupData>? barGroup() {
   List<BarChartGroupData> list = [];
-  for (int i = 0; i < chartsProvider.read.axis.length; i++) {
+  for (int i = 0; i < chartsProvider.read.listOfUndernutrition.length; i++) {
     list.add(
       BarChartGroupData(
         x: i,
         barRods: [
           BarChartRodData(
-            toY: double.parse(chartsProvider.read.axis[i].toString()),
+            toY: double.parse(
+                chartsProvider.read.listOfUndernutrition[i].toString()),
             gradient: _barsGradient,
-            width: 10,
+            width: 24,
             borderRadius: BorderRadius.circular(4),
           ),
           // BarChartRodData(
@@ -197,23 +256,18 @@ List<BarChartGroupData>? barGroup() {
 
 List<BarChartGroupData>? barGroups() {
   List<BarChartGroupData> list = [];
-  for (int i = 0; i < chartsProvider.read.axis.length; i++) {
+  for (int i = 0; i < chartsProvider.read.listOfNutrition.length; i++) {
     list.add(
       BarChartGroupData(
         x: i,
         barRods: [
           BarChartRodData(
-            toY: double.parse(chartsProvider.read.axis[i].toString()),
+            toY:
+                double.parse(chartsProvider.read.listOfNutrition[i].toString()),
             gradient: _barGradient,
-            width: 10,
+            width: 24,
             borderRadius: BorderRadius.circular(4),
           ),
-          // BarChartRodData(
-          //   toY: double.parse(chartsProvider.read.axis[i].toString()),
-          //   gradient: _barsGradient,
-          //   width: 22,
-          //   borderRadius: BorderRadius.circular(4),
-          // )
         ],
         showingTooltipIndicators: [0],
       ),
@@ -236,7 +290,6 @@ LinearGradient get _barGradient => LinearGradient(
       begin: Alignment.bottomCenter,
       end: Alignment.topCenter,
     );
-
 FlTitlesData get titlesData => const FlTitlesData(
       show: true,
       bottomTitles: AxisTitles(
@@ -260,25 +313,77 @@ FlTitlesData get titlesData => const FlTitlesData(
 Widget getTitles(double value, TitleMeta meta) {
   final style = TextStyle(
     color: AppColors.blue,
-    fontWeight: FontWeight.bold,
-    fontSize: 14,
+    fontSize: 12,
   );
   String text;
   switch (value.toInt()) {
     case 0:
-      text = '0-2';
+      text = '         0-2 años';
       break;
     case 1:
-      text = '3-5';
+      text = '         3-5 años';
       break;
     case 2:
-      text = '6-8';
+      text = '         6-8 años';
       break;
     case 3:
-      text = '9-10';
+      text = '         9-10 años';
       break;
     case 4:
-      text = '11-12';
+      text = '         11-12 años';
+      break;
+    default:
+      text = '         ';
+      break;
+  }
+  return SideTitleWidget(
+    axisSide: meta.axisSide,
+    space: 4,
+    child: Text(text, style: style),
+  );
+}
+
+FlTitlesData get stitlesData => const FlTitlesData(
+      show: true,
+      bottomTitles: AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 30,
+          getTitlesWidget: sgetTitles,
+        ),
+      ),
+      leftTitles: AxisTitles(
+        sideTitles: SideTitles(showTitles: false),
+      ),
+      topTitles: AxisTitles(
+        sideTitles: SideTitles(showTitles: false),
+      ),
+      rightTitles: AxisTitles(
+        sideTitles: SideTitles(showTitles: false),
+      ),
+    );
+
+Widget sgetTitles(double value, TitleMeta meta) {
+  final style = TextStyle(
+    color: AppColors.blue,
+    fontSize: 12,
+  );
+  String text;
+  switch (value.toInt()) {
+    case 0:
+      text = '';
+      break;
+    case 1:
+      text = '';
+      break;
+    case 2:
+      text = '';
+      break;
+    case 3:
+      text = '';
+      break;
+    case 4:
+      text = '';
       break;
     default:
       text = '';
@@ -296,7 +401,7 @@ BarTouchData get sbarTouchData => BarTouchData(
       touchTooltipData: BarTouchTooltipData(
         tooltipBgColor: Colors.transparent,
         tooltipPadding: EdgeInsets.zero,
-        tooltipMargin: 8,
+        tooltipMargin: 4,
         getTooltipItem: (
           BarChartGroupData group,
           int groupIndex,
@@ -304,10 +409,10 @@ BarTouchData get sbarTouchData => BarTouchData(
           int rodIndex,
         ) {
           return BarTooltipItem(
-            rod.toY.round().toString(),
+            '${rod.toY.round().toString()} kg',
             TextStyle(
-              color: Colors.transparent,
-              fontWeight: FontWeight.bold,
+              color: AppColors.blue,
+              fontSize: 12,
             ),
           );
         },
@@ -319,7 +424,7 @@ BarTouchData get barTouchData => BarTouchData(
       touchTooltipData: BarTouchTooltipData(
         tooltipBgColor: Colors.transparent,
         tooltipPadding: EdgeInsets.zero,
-        tooltipMargin: 8,
+        tooltipMargin: 4,
         getTooltipItem: (
           BarChartGroupData group,
           int groupIndex,
@@ -327,10 +432,10 @@ BarTouchData get barTouchData => BarTouchData(
           int rodIndex,
         ) {
           return BarTooltipItem(
-            rod.toY.round().toString(),
+            '${rod.toY.round().toString()} kg',
             TextStyle(
               color: AppColors.mainColor,
-              fontWeight: FontWeight.bold,
+              fontSize: 12,
             ),
           );
         },

@@ -12,8 +12,9 @@ import '../../domain/repositories/firebase_repository.dart';
 
 class FirebaseRepositoryImpl extends FirebaseRepository {
   final _firebaseinstance = FirebaseFirestore.instance.collection(
-    'surveys',
+    AppConstants.kFirebasefirestoreCollection,
   );
+
   final _sheetsRepository = Get.find<SheetsRepository>();
   @override
   Future<void> uploadSurvey({
@@ -28,11 +29,12 @@ class FirebaseRepositoryImpl extends FirebaseRepository {
     required double heigth,
     required double imc,
     required String nutricionalDiagnosis,
-    required bool nutricionalDiagnosisIsWrong,
+    required String user,
     required BuildContext context,
   }) async {
     final Map<String, Object> mapFirebase = {
       AppConstants.kLabelDate: date,
+      AppConstants.kUser: user,
       AppConstants.kLabelTimeStamp: timeStamp,
       AppConstants.kLabelName: name,
       AppConstants.kLabelLastame: lastame,
@@ -43,11 +45,10 @@ class FirebaseRepositoryImpl extends FirebaseRepository {
       AppConstants.kLabelHeigth: heigth,
       AppConstants.kLabelImc: imc,
       AppConstants.kLabelNutricionalDiagnosis: nutricionalDiagnosis,
-      AppConstants.kLabelNutricionalDiagnosisIsWrong:
-          nutricionalDiagnosisIsWrong,
     };
     final Map<String, dynamic> mapSheets = {
       SheetsColumn.date: date.toString(),
+      SheetsColumn.user: user,
       SheetsColumn.timeStamp: timeStamp,
       SheetsColumn.name: name,
       SheetsColumn.lastame: lastame,
@@ -58,9 +59,7 @@ class FirebaseRepositoryImpl extends FirebaseRepository {
       SheetsColumn.heigth: heigth,
       SheetsColumn.imc: imc,
       SheetsColumn.nutricionalDiagnosis: nutricionalDiagnosis,
-      SheetsColumn.nutricionalDiagnosisIsWrong: nutricionalDiagnosisIsWrong,
     };
-
     await _firebaseinstance.add(mapFirebase).then((value) async {
       await _sheetsRepository.insert([mapSheets]);
       router.maybePop();
@@ -84,5 +83,11 @@ class FirebaseRepositoryImpl extends FirebaseRepository {
         );
       },
     );
+  }
+
+  @override
+  Future<Map<String, dynamic>> search(String query) {
+    // TODO: implement search
+    throw UnimplementedError();
   }
 }

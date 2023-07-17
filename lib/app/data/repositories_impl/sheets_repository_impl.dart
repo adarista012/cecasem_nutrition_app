@@ -45,6 +45,6 @@ class SheetsRepositoryImpl extends SheetsRepository {
 
   @override
   Future<List<dynamic>> get(int column) async {
-    return await _userSheet!.values.column(column);
+    return await _userSheet!.values.column(column, fromRow: 2);
   }
 }

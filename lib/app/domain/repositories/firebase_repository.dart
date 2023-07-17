@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 abstract class FirebaseRepository {
   Future<void> uploadSurvey({
     required DateTime date,
+    required String user,
     required int timeStamp,
     required String name,
     required String lastame,
@@ -13,7 +14,7 @@ abstract class FirebaseRepository {
     required double heigth,
     required double imc,
     required String nutricionalDiagnosis,
-    required bool nutricionalDiagnosisIsWrong,
     required BuildContext context,
   });
+  Future<Map<String, dynamic>> search(String query);
 }

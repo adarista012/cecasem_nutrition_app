@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 import 'package:cecasem_nutricion_app/app/domain/repositories/sheets_repository.dart';
@@ -19,10 +20,14 @@ class ChartsController extends SimpleNotifier {
   List<dynamic>? _xAxis;
   List<dynamic>? _yAxis;
   List<double> _axis = [];
-  List<dynamic> _weigthChart = [];
-  List<dynamic> _heightChart = [];
+  final List<dynamic> _weigthChart = [];
+  final List<dynamic> _heightChart = [];
+  final List<dynamic> _totalChart = [];
+  final List<String> _listOfComunitys = [];
+  final List<double> _listOfNutrition = [];
+  final List<double> _listOfUndernutrition = [];
+  String? _comunity;
 
-  List<int>? _agesInMonths;
   bool _isLoading = false;
   List<String> get listOfTabs => _listOfTabs;
   PreferredSizeWidget get tabBar => _tabBar;
@@ -31,6 +36,11 @@ class ChartsController extends SimpleNotifier {
   List<dynamic>? get yAxis => _yAxis;
   List<dynamic>? get weigthChart => _weigthChart;
   List<dynamic>? get heightChart => _heightChart;
+  List<dynamic>? get totalChart => _totalChart;
+  List<String>? get listOfComunitys => _listOfComunitys;
+  List<double> get listOfNutrition => _listOfNutrition;
+  List<double> get listOfUndernutrition => _listOfUndernutrition;
+  String? get comunity => _comunity;
 
   List<double> get axis => _axis;
 
@@ -43,34 +53,159 @@ class ChartsController extends SimpleNotifier {
     _yAxis = null;
   }
 
-  void _init() async {}
+  void _init() async {
+    _isLoading = true;
+
+    final firebaseinstance = FirebaseFirestore.instance.collection(
+      'comunitys',
+    );
+    await firebaseinstance.get().then((value) {
+      _listOfComunitys.addAll(value.docs.map((e) => e.data()['comunity']));
+    });
+    _isLoading = false;
+    notify();
+  }
+
+  void changeComunity(String value) {
+    _comunity = value;
+    notify();
+  }
 
   void switchChart(String tab) {
     switch (tab) {
       case AppConstants.titleWeight:
         _weigthChart.clear();
-        chart(8, _weigthChart);
+        chart(9, _weigthChart);
       case AppConstants.titleHeigth:
         _heightChart.clear();
-        chart(9, _heightChart);
+        chart(10, _heightChart);
       case AppConstants.titleDiagnosis:
-        chartDiagnosis(11);
+        chartDiagnosis(12);
       case AppConstants.titleDesnutrition:
         print(_sheetsRepository.get(2));
       case AppConstants.titleTotal:
-        print(_sheetsRepository.get(12));
+        pieChart();
     }
+    notify();
+  }
+
+  void pieChart() async {
+    _totalChart.clear();
+    _isLoading = true;
+    List<double> listPresentation = [0.0, 0.0, 0.0, 0.0, 0.0];
+    List ages = await _sheetsRepository.get(8);
+    List comunitys = await _sheetsRepository.get(6);
+    int total = 0;
+    for (int i = 0; i < ages.length; i++) {
+      int age = int.parse(ages[i]);
+      if (comunitys[i] == comunity) {
+        if (age >= 0 && age <= 24) {
+          listPresentation[0]++;
+          total++;
+        }
+        if (age > 24 && age <= 60) {
+          listPresentation[1]++;
+          total++;
+        }
+        if (age > 60 && age <= 96) {
+          listPresentation[2]++;
+          total++;
+        }
+        if (age > 96 && age <= 120) {
+          listPresentation[3]++;
+          total++;
+        }
+        if (age > 120 && age <= 144) {
+          listPresentation[4]++;
+          total++;
+        }
+      }
+    }
+    _totalChart.addAll(
+      listPresentation.map((e) => (e / (total * 0.01)).round()).toList(),
+    );
+    _isLoading = false;
+    notify();
   }
 
   void chartDiagnosis(int column) async {
+    _listOfNutrition.clear();
+    _listOfUndernutrition.clear();
     _isLoading = true;
-    notify();
-    final x = await agesPresentation();
-    final y = await axisPresentation(column, []);
 
-    _xAxis = x;
-    _yAxis = y;
+    List<double> nutritionList = [0.0, 0.0, 0.0, 0.0, 0.0];
+    List<double> underNutritionList = [0.0, 0.0, 0.0, 0.0, 0.0];
+    List<int> nutritionalCounter = [0, 0, 0, 0, 0];
+    List<int> unutritionalCounter = [0, 0, 0, 0, 0];
 
+    List ages = await _sheetsRepository.get(8);
+    List comunitys = await _sheetsRepository.get(6);
+    List nutritions = await _sheetsRepository.get(12);
+    List weights = await _sheetsRepository.get(9);
+    for (int i = 0; i < comunitys.length; i++) {
+      if (comunitys[i] == _comunity) {
+        int age = int.parse(ages[i]);
+        if (age >= 0 && age <= 24) {
+          if (nutritions[i] == 'Desnutrición') {
+            print('in');
+            underNutritionList[0] += double.parse(weights[i]);
+            unutritionalCounter[0]++;
+          } else {
+            nutritionList[0] += double.parse(weights[i]);
+            nutritionalCounter[0]++;
+          }
+        }
+        if (age > 24 && age <= 60) {
+          if (nutritions[i] == 'Desnutrición') {
+            underNutritionList[1] += double.parse(weights[i]);
+            unutritionalCounter[1]++;
+          } else {
+            nutritionList[1] += double.parse(weights[i]);
+            nutritionalCounter[1]++;
+          }
+        }
+        if (age > 60 && age <= 96) {
+          if (nutritions[i] == 'Desnutrición') {
+            underNutritionList[2] += double.parse(weights[i]);
+            unutritionalCounter[2]++;
+          } else {
+            nutritionList[2] += double.parse(weights[i]);
+            nutritionalCounter[2]++;
+          }
+        }
+        if (age > 96 && age <= 120) {
+          if (nutritions[i] == 'Desnutrición') {
+            underNutritionList[3] += double.parse(weights[i]);
+            unutritionalCounter[3]++;
+          } else {
+            nutritionList[3] += double.parse(weights[i]);
+            nutritionalCounter[3]++;
+          }
+        }
+        if (age > 120 && age <= 144) {
+          if (nutritions[i] == 'Desnutrición') {
+            underNutritionList[4] += double.parse(weights[i]);
+            unutritionalCounter[4]++;
+          } else {
+            nutritionList[4] += double.parse(weights[i]);
+            nutritionalCounter[4]++;
+          }
+        }
+      }
+    }
+    for (int i = 0; i < nutritionalCounter.length; i++) {
+      if (nutritionalCounter[i] != 0) {
+        _listOfNutrition.add(nutritionList[i] / nutritionalCounter[i]);
+      } else {
+        _listOfNutrition.add(0);
+      }
+      if (unutritionalCounter[i] != 0) {
+        _listOfUndernutrition
+            .add(underNutritionList[i] / unutritionalCounter[i]);
+      } else {
+        _listOfUndernutrition.add(0);
+      }
+    }
     _isLoading = false;
     notify();
   }
@@ -90,9 +225,9 @@ class ChartsController extends SimpleNotifier {
 
   double maxY() {
     double max = 0;
-    _yAxis!.forEach((e) {
+    for (var e in _yAxis!) {
       if (e > max) max = e;
-    });
+    }
     return max;
   }
 
@@ -100,12 +235,12 @@ class ChartsController extends SimpleNotifier {
     List<int> x = [];
     List<double> y = [];
     await _sheetsRepository.get(column).then((value) {
-      for (int i = 1; i < value.length; i++) {
+      for (int i = 0; i < value.length; i++) {
         y.add(double.parse(value[i]));
       }
     });
-    await _sheetsRepository.get(7).then((value) {
-      for (int i = 1; i < value.length; i++) {
+    await _sheetsRepository.get(8).then((value) {
+      for (int i = 0; i < value.length; i++) {
         x.add(int.parse(value[i]));
       }
     });
@@ -117,8 +252,9 @@ class ChartsController extends SimpleNotifier {
 
   Future<List> agesPresentation() async {
     List<int> x = [0, 0, 0, 0, 0];
-    await _sheetsRepository.get(7).then((value) {
-      for (int i = 1; i < value.length; i++) {
+
+    await _sheetsRepository.get(8).then((value) {
+      for (int i = 0; i < value.length; i++) {
         if (int.parse(value[i]) >= 0 && int.parse(value[i]) <= 24) x[0]++;
         if (int.parse(value[i]) > 24 && int.parse(value[i]) <= 60) x[1]++;
         if (int.parse(value[i]) > 60 && int.parse(value[i]) <= 96) x[2]++;
@@ -139,26 +275,29 @@ class ChartsController extends SimpleNotifier {
     List<int> x = [0, 0, 0, 0, 0];
     List<double> y = [0, 0, 0, 0, 0];
     List<double> p = [0, 0, 0, 0, 0];
-    for (int i = 1; i < ages.length; i++) {
-      if (ages[i] >= 0 && ages[i] <= 24) {
-        x[0]++;
-        y[0] += weights[i];
-      }
-      if (ages[i] > 24 && ages[i] <= 60) {
-        x[1]++;
-        y[1] += weights[i];
-      }
-      if (ages[i] > 60 && ages[i] <= 96) {
-        x[2]++;
-        y[2] += weights[i];
-      }
-      if (ages[i] > 96 && ages[i] <= 120) {
-        x[3]++;
-        y[3] += weights[i];
-      }
-      if (ages[i] > 120 && ages[i] <= 144) {
-        x[4]++;
-        y[4] += weights[i];
+    List comunitys = await _sheetsRepository.get(6);
+    for (int i = 0; i < comunitys.length; i++) {
+      if (comunitys[i] == _comunity) {
+        if (ages[i] >= 0 && ages[i] <= 24) {
+          x[0]++;
+          y[0] += weights[i];
+        }
+        if (ages[i] > 24 && ages[i] <= 60) {
+          x[1]++;
+          y[1] += weights[i];
+        }
+        if (ages[i] > 60 && ages[i] <= 96) {
+          x[2]++;
+          y[2] += weights[i];
+        }
+        if (ages[i] > 96 && ages[i] <= 120) {
+          x[3]++;
+          y[3] += weights[i];
+        }
+        if (ages[i] > 120 && ages[i] <= 144) {
+          x[4]++;
+          y[4] += weights[i];
+        }
       }
     }
 
@@ -171,7 +310,6 @@ class ChartsController extends SimpleNotifier {
       _axis.add(p[i]);
       listPresentation.add(p[i]);
     }
-    // listPresentation.addAll(_axis);
 
     return p;
   }

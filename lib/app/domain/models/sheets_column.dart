@@ -2,6 +2,7 @@ import 'package:cecasem_nutricion_app/app/utils/app_constants.dart';
 
 class SheetsColumn {
   static const date = AppConstants.kLabelDate;
+  static const user = AppConstants.kUser;
   static const timeStamp = AppConstants.kLabelTimeStamp;
   static const name = AppConstants.kLabelName;
   static const lastame = AppConstants.kLabelLastame;
@@ -13,11 +14,9 @@ class SheetsColumn {
   static const imc = AppConstants.kLabelImc;
   static const nutricionalDiagnosis = AppConstants.kLabelNutricionalDiagnosis;
 
-  static const nutricionalDiagnosisIsWrong =
-      AppConstants.kLabelNutricionalDiagnosisIsWrong;
-
   static List<String> getColumns() => [
         date,
+        user,
         timeStamp,
         name,
         lastame,
@@ -27,7 +26,6 @@ class SheetsColumn {
         weight,
         heigth,
         imc,
-        nutricionalDiagnosis,
-        nutricionalDiagnosisIsWrong,
+        nutricionalDiagnosis
       ];
 }
