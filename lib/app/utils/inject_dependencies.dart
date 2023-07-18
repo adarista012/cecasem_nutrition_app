@@ -13,13 +13,12 @@ Future<void> injectDependencies() async {
       firebaseAuth: FirebaseAuth.instance,
     ),
   );
+
   Get.lazyPut<FirebaseRepository>(
     () => FirebaseRepositoryImpl(),
   );
 
-  // await GoogleSheets.init();
-
-  Get.lazyPut<SheetsRepository>(
-    () => SheetsRepositoryImpl(),
+  Get.put<SheetsRepository>(
+    SheetsRepositoryImpl(),
   );
 }
