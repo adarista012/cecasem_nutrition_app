@@ -1,45 +1,53 @@
-import 'package:cecasem_nutricion_app/app/data/repositories_impl/sheets_repository_impl.dart';
+import 'package:cecasem_nutricion_app/app/domain/repositories/sheets_repository.dart';
+import 'package:cecasem_nutricion_app/app/presentation/modules/search_survey/utils/to_key_for_map.dart';
+import 'package:cecasem_nutricion_app/app/presentation/modules/search_survey/utils/to_searchable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/meedu.dart';
 
 class SearchSurveyController extends SimpleNotifier {
-  bool _isLoading = false;
-  final SheetsRepositoryImpl _sheetsRepository = SheetsRepositoryImpl();
   final List<String> _listSearcheable = [];
   final Map<String, String> _mapNames = {};
+  final Map<String, String> _mapIds = {};
   final TextEditingController _queryTextEditingController =
       TextEditingController();
-  TextEditingController get queryTextEditingController =>
-      _queryTextEditingController;
+  final _sheetsRepository = Get.find<SheetsRepository>();
+
+  bool _isLoading = false;
+
   bool get isLoading => _isLoading;
   List<String> get listSearcheable => _listSearcheable;
+  TextEditingController get queryTextEditingController =>
+      _queryTextEditingController;
+  Map<String, String> get mapNames => _mapNames;
+  Map<String, String> get mapIds => _mapIds;
 
   SearchSurveyController() {
     _init();
   }
 
-  void _init() async {
-    await getListToSearch();
+  void _init() {
+    getListToSearch();
   }
 
-  Future<void> getListToSearch() async {
+  void getListToSearch() async {
     _isLoading = true;
-    List<dynamic> names = await _sheetsRepository.get(4);
-    List<dynamic> lastNames = await _sheetsRepository.get(5);
 
+    List names = await _sheetsRepository.get(4);
+    List lastNames = await _sheetsRepository.get(5);
+    List ids = await _sheetsRepository.get(14);
     for (int i = 0; i < names.length; i++) {
-      String nameSearcheable = names[i].toString().trim().toLowerCase() +
-          lastNames[i].toString().trim().toLowerCase();
-      String namesToMap = '${names[i].toString()} ${lastNames[i]}';
-      // _listSearcheable.add(nameSearcheable);
-      _mapNames[nameSearcheable] = namesToMap;
+      String key = toKeyForMap(names[i], lastNames[i]);
+      String namesToMap = '${names[i]} ${lastNames[i]}';
+      _mapNames[key] = namesToMap;
+      _mapIds[namesToMap] = ids[i];
     }
+
     _isLoading = false;
     notify();
   }
 
   void textOnChange(String? str) {
-    var nameToSearch = str!.toLowerCase().replaceAll(r' ', '').trim();
+    var nameToSearch = toSearcheableText(str!);
     compareTo(nameToSearch);
   }
 
@@ -51,9 +59,7 @@ class SearchSurveyController extends SimpleNotifier {
         _listSearcheable.add(_mapNames[element]!);
       }
     }
-    if (name.isEmpty) {
-      _listSearcheable.clear();
-    }
+    if (name.isEmpty) _listSearcheable.clear();
     notify();
   }
 }

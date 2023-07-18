@@ -4,4 +4,3 @@ import 'search_survey_controller.dart';
 final searchSurveyProvider = SimpleProvider(
   (_) => SearchSurveyController(),
 );
-  
