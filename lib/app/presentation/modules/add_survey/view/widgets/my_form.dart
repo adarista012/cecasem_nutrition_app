@@ -158,35 +158,9 @@ class MyForm extends StatelessWidget {
             ),
           ],
         ),
-        // Container(
-        //   height: 58,
-        //   width: double.infinity,
-        //   alignment: Alignment.center,
-        //   decoration: BoxDecoration(
-        //       border: Border.all(
-        //         color: AppColors.mainColor,
-        //       ),
-        //       borderRadius: BorderRadius.circular(8.0)),
-        //   child: DropdownButton(
-        //     value: controller.sex,
-        //     padding: const EdgeInsets.all(8.0),
-        //     elevation: 16,
-        //     underline: Container(
-        //       color: AppColors.transparent,
-        //     ),
-        //     items: controller.listSex
-        //         .map<DropdownMenuItem<String>>((String value) {
-        //       return DropdownMenuItem<String>(
-        //         value: value,
-        //         child: Text(value.toString()),
-        //       );
-        //     }).toList(),
-        //     onChanged: controller.editSex,
-        //   ),
-        // ),
         Padding(
           padding: const EdgeInsets.only(
-            top: 4.0,
+            top: 0.0,
             right: 2.0,
             left: 2.0,
           ),
@@ -419,50 +393,8 @@ class MyForm extends StatelessWidget {
             onChanged: controller.editDiagnosis,
           ),
         ),
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(
-        //     vertical: 6.0,
-        //   ),
-        //   child: Row(
-        //     children: [
-        //       Text(
-        //         '${AppConstants.nutritionalDiagnosis}: ',
-        //         style: TextStyle(
-        //           color: AppColors.mainColor,
-        //           fontWeight: FontWeight.w600,
-        //           fontSize: 16,
-        //         ),
-        //       ),
-        //       Text(
-        //         controller.nutritionalDiagnosis ?? '',
-        //         style: TextStyle(
-        //           fontSize: 16,
-        //           color: controller.nutritionalDiagnosisColor,
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        // Row(
-        //   children: [
-        //     Text(
-        //       '${AppConstants.nutritionalDiagnosisWrong}: ',
-        //       style: TextStyle(
-        //         color: AppColors.mainColor,
-        //         fontWeight: FontWeight.w600,
-        //         fontSize: 16,
-        //       ),
-        //     ),
-        //     Checkbox(
-        //       value: controller.nutritionalDiagnosisWrong,
-        //       checkColor: AppColors.white,
-        //       activeColor: AppColors.red,
-        //       onChanged: controller.checkBoxChange,
-        //     )
-        //   ],
-        // ),
         const SizedBox(
-          height: 8.0,
+          height: 16.0,
         ),
         MaterialButton(
           onPressed: () {

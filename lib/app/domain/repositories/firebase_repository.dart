@@ -14,7 +14,8 @@ abstract class FirebaseRepository {
     required double heigth,
     required double imc,
     required String nutricionalDiagnosis,
+    required String nutricionalDiagnosisPrediction,
     required BuildContext context,
   });
-  Future<Map<String, dynamic>> search(String query);
+  Future<Map<String, dynamic>> searchDocument(String id);
 }

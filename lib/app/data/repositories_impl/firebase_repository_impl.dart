@@ -29,6 +29,7 @@ class FirebaseRepositoryImpl extends FirebaseRepository {
     required double heigth,
     required double imc,
     required String nutricionalDiagnosis,
+    required String nutricionalDiagnosisPrediction,
     required String user,
     required BuildContext context,
   }) async {
@@ -45,22 +46,28 @@ class FirebaseRepositoryImpl extends FirebaseRepository {
       AppConstants.kLabelHeigth: heigth,
       AppConstants.kLabelImc: imc,
       AppConstants.kLabelNutricionalDiagnosis: nutricionalDiagnosis,
+      AppConstants.kLabelNutricionalDiagnosisPrediction:
+          nutricionalDiagnosisPrediction,
     };
-    final Map<String, dynamic> mapSheets = {
-      SheetsColumn.date: date.toString(),
-      SheetsColumn.user: user,
-      SheetsColumn.timeStamp: timeStamp,
-      SheetsColumn.name: name,
-      SheetsColumn.lastame: lastame,
-      SheetsColumn.comunity: comunity,
-      SheetsColumn.sex: sex,
-      SheetsColumn.months: months,
-      SheetsColumn.weight: weight,
-      SheetsColumn.heigth: heigth,
-      SheetsColumn.imc: imc,
-      SheetsColumn.nutricionalDiagnosis: nutricionalDiagnosis,
-    };
+
     await _firebaseinstance.add(mapFirebase).then((value) async {
+      final Map<String, dynamic> mapSheets = {
+        SheetsColumn.date: date.toString(),
+        SheetsColumn.user: user,
+        SheetsColumn.timeStamp: timeStamp,
+        SheetsColumn.name: name,
+        SheetsColumn.lastame: lastame,
+        SheetsColumn.comunity: comunity,
+        SheetsColumn.sex: sex,
+        SheetsColumn.months: months,
+        SheetsColumn.weight: weight,
+        SheetsColumn.heigth: heigth,
+        SheetsColumn.imc: imc,
+        SheetsColumn.nutricionalDiagnosis: nutricionalDiagnosis,
+        SheetsColumn.nutricionalDiagnosisPrediction:
+            nutricionalDiagnosisPrediction,
+        SheetsColumn.firebaseId: value.id
+      };
       await _sheetsRepository.insert([mapSheets]);
       router.maybePop();
       // ignore: use_build_context_synchronously
@@ -86,8 +93,13 @@ class FirebaseRepositoryImpl extends FirebaseRepository {
   }
 
   @override
-  Future<Map<String, dynamic>> search(String query) {
-    // TODO: implement search
-    throw UnimplementedError();
+  Future<Map<String, dynamic>> searchDocument(String id) async {
+    Map<String, dynamic> map = {};
+    await _firebaseinstance.doc(id).get().then(
+      (querySnapshot) {
+        map.addAll(querySnapshot.data()!);
+      },
+    );
+    return map;
   }
 }

@@ -13,6 +13,9 @@ class SheetsColumn {
   static const heigth = AppConstants.kLabelHeigth;
   static const imc = AppConstants.kLabelImc;
   static const nutricionalDiagnosis = AppConstants.kLabelNutricionalDiagnosis;
+  static const nutricionalDiagnosisPrediction =
+      AppConstants.kLabelNutricionalDiagnosisPrediction;
+  static const firebaseId = AppConstants.kLabelFirebaseId;
 
   static List<String> getColumns() => [
         date,
@@ -26,6 +29,8 @@ class SheetsColumn {
         weight,
         heigth,
         imc,
-        nutricionalDiagnosis
+        nutricionalDiagnosis,
+        nutricionalDiagnosisPrediction,
+        firebaseId
       ];
 }

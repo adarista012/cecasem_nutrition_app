@@ -3,8 +3,6 @@ import 'package:cecasem_nutricion_app/app/utils/sheets_credentials.dart';
 class AppConstants {
   static const String kNameToTheApp = 'Cecasem Nutrición';
   static const String kFirebasefirestoreCollection = 'surveys';
-  static const String kGoogleSheetsId =
-      '16ZT-YYusYMGIoLRKq_Rw_I_k4maBDUblDBg0rO5iniE';
   static const String kGoogleSheetsCredentials = SheetsCredentials.credential;
 
   static const String kNameGoogleSheetsData = 'data';
@@ -20,6 +18,9 @@ class AppConstants {
   static const String kLabelHeigth = 'Heigth in cm';
   static const String kLabelImc = 'IMC';
   static const String kLabelNutricionalDiagnosis = 'Nutricional diagnosis';
+  static const String kLabelNutricionalDiagnosisPrediction =
+      'Nutricional diagnosis prediction';
+  static const String kLabelFirebaseId = 'Firebase id';
   //
   static const String kUser = 'User';
   static String headerCharts = 'Estadísticas';
@@ -54,14 +55,15 @@ class AppConstants {
       'La contraseña debe tener más de cinco caracteres';
   static String logoAssetRoute = 'images/logo.png';
   static String error = 'Error';
-  static String ok = 'Ok';
-//
+  static const String ok = 'Ok';
+// routes
   static const String routeHome = '/home';
   static const String routeSplash = '/splash';
   static const String routeLogin = '/login';
   static const String routeAddSurvey = '/add_survey';
   static const String routeSearchSurvey = '/search_survey';
   static const String routeCharts = '/charts';
+  static const String routeDetail = '/detail';
   //
   // tab titles
 
@@ -87,4 +89,8 @@ class AppConstants {
 
   //searcher
   static const String searcher = 'Buscador';
+  static const String searcherIndications = 'Ingrese el nombre a buscar';
+  static const String searcherLabel = 'Ingrese algún nombre';
+
+  static const String detail = "Detalle";
 }

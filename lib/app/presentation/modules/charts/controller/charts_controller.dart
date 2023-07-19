@@ -80,9 +80,9 @@ class ChartsController extends SimpleNotifier {
         _heightChart.clear();
         chart(10, _heightChart);
       case AppConstants.titleDiagnosis:
-        chartDiagnosis(12);
+        chartDiagnosis();
       case AppConstants.titleDesnutrition:
-        print(_sheetsRepository.get(2));
+        print('plplplpl');
       case AppConstants.titleTotal:
         pieChart();
     }
@@ -128,11 +128,13 @@ class ChartsController extends SimpleNotifier {
     notify();
   }
 
-  void chartDiagnosis(int column) async {
+  void chartDiagnosis() async {
     _listOfNutrition.clear();
     _listOfUndernutrition.clear();
     _isLoading = true;
 
+    print(_listOfNutrition);
+    print(_listOfUndernutrition);
     List<double> nutritionList = [0.0, 0.0, 0.0, 0.0, 0.0];
     List<double> underNutritionList = [0.0, 0.0, 0.0, 0.0, 0.0];
     List<int> nutritionalCounter = [0, 0, 0, 0, 0];
@@ -141,13 +143,13 @@ class ChartsController extends SimpleNotifier {
     List ages = await _sheetsRepository.get(8);
     List comunitys = await _sheetsRepository.get(6);
     List nutritions = await _sheetsRepository.get(12);
+    print(nutritions);
     List weights = await _sheetsRepository.get(9);
     for (int i = 0; i < comunitys.length; i++) {
       if (comunitys[i] == _comunity) {
         int age = int.parse(ages[i]);
         if (age >= 0 && age <= 24) {
           if (nutritions[i] == 'Desnutrición') {
-            print('in');
             underNutritionList[0] += double.parse(weights[i]);
             unutritionalCounter[0]++;
           } else {
@@ -206,6 +208,7 @@ class ChartsController extends SimpleNotifier {
         _listOfUndernutrition.add(0);
       }
     }
+
     _isLoading = false;
     notify();
   }
@@ -223,9 +226,9 @@ class ChartsController extends SimpleNotifier {
     notify();
   }
 
-  double maxY() {
+  double maxY(List y) {
     double max = 0;
-    for (var e in _yAxis!) {
+    for (var e in y) {
       if (e > max) max = e;
     }
     return max;

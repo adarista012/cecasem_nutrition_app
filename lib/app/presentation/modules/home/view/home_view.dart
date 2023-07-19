@@ -44,7 +44,7 @@ class HomeView extends StatelessWidget {
                             fontWeight: FontWeight.w500),
                       ),
                       Text(
-                        controller.name ?? controller.email!,
+                        controller.name ?? controller.email ?? '',
                         style: TextStyle(
                           color: AppColors.mainColor,
                           fontSize: 20.0,

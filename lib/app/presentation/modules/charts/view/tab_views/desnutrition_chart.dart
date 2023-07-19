@@ -82,7 +82,7 @@ class DesnutritionChart extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Center(
               child: !controller.isLoading
-                  ? controller.weigthChart == null ||
+                  ? controller.listOfNutrition.isEmpty ||
                           controller.weigthChart!.isEmpty
                       ? Text(
                           'Seleccionar ${AppConstants.comunity}',

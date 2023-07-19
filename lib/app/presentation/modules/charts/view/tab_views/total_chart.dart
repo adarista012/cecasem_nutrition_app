@@ -98,10 +98,21 @@ class TotalChart extends StatelessWidget {
                               width: MediaQuery.of(context).size.width - 32,
                               height: MediaQuery.of(context).size.width - 32,
                               decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: AppColors.blue,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8)),
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: AppColors.grey,
+                                  width: 0.8,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.grey.withOpacity(0.6),
+                                    blurRadius: 2.4,
+                                    spreadRadius: 0.8,
+                                    offset: const Offset(0, 1),
+                                  )
+                                ],
+                              ),
                               child: Column(
                                 children: [
                                   Expanded(

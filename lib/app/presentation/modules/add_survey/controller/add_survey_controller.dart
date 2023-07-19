@@ -54,6 +54,7 @@ class AddSurveyController extends SimpleNotifier {
   String? _error;
   String? _imc;
   String? _nutritionalDiagnosis;
+  String? _nutritionalDiagnosisPrediction;
   String? _comunity;
   bool? _nutritionalDiagnosisWrong = false;
   bool? _isLoading = false;
@@ -120,6 +121,7 @@ class AddSurveyController extends SimpleNotifier {
 
   void calculateNutritionalDiagnois() {
     _indexImcIndicator = null;
+    _nutritionalDiagnosisPrediction = null;
     _nutritionalDiagnosis = null;
     if (totalMonths() <= 144) {
       double currentImc =
@@ -162,21 +164,21 @@ class AddSurveyController extends SimpleNotifier {
     }
     if (_indexImcIndicator != null) {
       if (_listPercentils[_indexImcIndicator!] < 5) {
-        _nutritionalDiagnosis = _listDiagnosis.first;
+        _nutritionalDiagnosisPrediction = _listDiagnosis.first;
         _nutritionalDiagnosisColor = AppColors.amber;
       }
       if (_listPercentils[_indexImcIndicator!] >= 5 &&
           _listPercentils[_indexImcIndicator!] < 85) {
-        _nutritionalDiagnosis = _listDiagnosis[1];
+        _nutritionalDiagnosisPrediction = _listDiagnosis[1];
         _nutritionalDiagnosisColor = AppColors.greenCheck;
       }
       if (_listPercentils[_indexImcIndicator!] >= 85 &&
           _listPercentils[_indexImcIndicator!] < 95) {
-        _nutritionalDiagnosis = _listDiagnosis[2];
+        _nutritionalDiagnosisPrediction = _listDiagnosis[2];
         _nutritionalDiagnosisColor = AppColors.yellow;
       }
       if (_listPercentils[_indexImcIndicator!] >= 95) {
-        _nutritionalDiagnosis = _listDiagnosis.last;
+        _nutritionalDiagnosisPrediction = _listDiagnosis.last;
         _nutritionalDiagnosisColor = AppColors.red;
       }
     }
@@ -295,8 +297,6 @@ class AddSurveyController extends SimpleNotifier {
   }
 
   void sendSurvey(BuildContext _) async {
-    _isLoading = true;
-    notify();
     if (_heigthController.value.text.isEmpty) {
       _error = 'La talla debe ser mayor a cero';
     }
@@ -315,8 +315,11 @@ class AddSurveyController extends SimpleNotifier {
         _error = 'El peso debe ser mayor a cero';
       }
     }
-    if (comunity == null) {
-      _error = 'El campo comunidad no puede estar vacio';
+    if (_comunity == null) {
+      _error = 'Seleccionar una comunidad';
+    }
+    if (_nutritionalDiagnosis == null) {
+      _error = 'Selecionar un diagnóstico nutricional';
     }
     if (lastNameController.value.text == '' &&
         lastNameController.value.text.isEmpty) {
@@ -342,11 +345,13 @@ class AddSurveyController extends SimpleNotifier {
         heigth: editNumber(_heigthController.value.text),
         imc: double.parse(_imc!),
         nutricionalDiagnosis: _nutritionalDiagnosis!,
+        nutricionalDiagnosisPrediction:
+            _nutritionalDiagnosisPrediction ?? 'null',
         user: await getUserName(),
         context: _,
       );
     }
-    _isLoading = false;
+
     notify();
   }
 }
