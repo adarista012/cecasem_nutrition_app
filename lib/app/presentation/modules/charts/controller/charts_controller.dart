@@ -12,7 +12,7 @@ class ChartsController extends SimpleNotifier {
       Tab(text: AppConstants.titleWeight),
       Tab(text: AppConstants.titleHeigth),
       Tab(text: AppConstants.titleDiagnosis),
-      Tab(text: AppConstants.titleDesnutrition),
+      Tab(text: AppConstants.titleUnNutrition),
       Tab(text: AppConstants.titleTotal),
     ],
   );
@@ -26,6 +26,8 @@ class ChartsController extends SimpleNotifier {
   final List<String> _listOfComunitys = [];
   final List<double> _listOfNutrition = [];
   final List<double> _listOfUndernutrition = [];
+  final Map<int, double> _mapOfNutrition = {};
+  final Map<int, double> _mapOfUndernutrition = {};
   String? _comunity;
 
   bool _isLoading = false;
@@ -40,6 +42,8 @@ class ChartsController extends SimpleNotifier {
   List<String>? get listOfComunitys => _listOfComunitys;
   List<double> get listOfNutrition => _listOfNutrition;
   List<double> get listOfUndernutrition => _listOfUndernutrition;
+  Map<int, double> get mapOfNutrition => _mapOfNutrition;
+  Map<int, double> get mapOfUndernutrition => _mapOfUndernutrition;
   String? get comunity => _comunity;
 
   List<double> get axis => _axis;
@@ -81,11 +85,77 @@ class ChartsController extends SimpleNotifier {
         chart(10, _heightChart);
       case AppConstants.titleDiagnosis:
         chartDiagnosis();
-      case AppConstants.titleDesnutrition:
-        print('plplplpl');
+      case AppConstants.titleUnNutrition:
+        chartUnNutrition();
       case AppConstants.titleTotal:
         pieChart();
     }
+    notify();
+  }
+
+  void chartUnNutrition() async {
+    _isLoading = true;
+    List date = await _sheetsRepository.get(3);
+    List diagnosis = await _sheetsRepository.get(12);
+    List weights = await _sheetsRepository.get(9);
+    List comunitys = await _sheetsRepository.get(6);
+    List<int> counterN = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    List<int> counterUN = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    Map<int, double> mapUnderNutrition = {
+      1: 0.0,
+      2: 0.0,
+      3: 0.0,
+      4: 0.0,
+      5: 0.0,
+      6: 0.0,
+      7: 0.0,
+      8: 0.0,
+      9: 0.0,
+      10: 0.0,
+      11: 0.0,
+      12: 0.0
+    };
+    Map<int, double> mapNutrition = {
+      1: 0.0,
+      2: 0.0,
+      3: 0.0,
+      4: 0.0,
+      5: 0.0,
+      6: 0.0,
+      7: 0.0,
+      8: 0.0,
+      9: 0.0,
+      10: 0.0,
+      11: 0.0,
+      12: 0.0
+    };
+
+    for (int i = 0; i < date.length; i++) {
+      var d = DateTime.fromMillisecondsSinceEpoch(int.parse(date[i]));
+      if (comunitys[i] == _comunity) {
+        if (diagnosis[i] == 'Desnutrición') {
+          counterUN[d.month - 1]++;
+          mapUnderNutrition[d.month] =
+              mapUnderNutrition[d.month]! + double.parse(weights[i]);
+        } else {
+          counterN[d.month - 1]++;
+          mapNutrition[d.month] =
+              mapNutrition[d.month]! + double.parse(weights[i]);
+        }
+      }
+    }
+    for (int i = 0; i < counterN.length; i++) {
+      mapNutrition[i + 1] =
+          counterN[i] == 0 ? 0 : mapNutrition[i + 1]! / counterN[i];
+      // print(mapNutrition[i + 1]);
+      mapUnderNutrition[i + 1] =
+          counterUN[i] == 0 ? 0 : mapUnderNutrition[i + 1]! / counterUN[i];
+      // print(mapUnderNutrition[i + 1]);
+    }
+    _mapOfNutrition.addAll(mapNutrition);
+    _mapOfUndernutrition.addAll(mapUnderNutrition);
+
+    _isLoading = false;
     notify();
   }
 
@@ -133,8 +203,6 @@ class ChartsController extends SimpleNotifier {
     _listOfUndernutrition.clear();
     _isLoading = true;
 
-    print(_listOfNutrition);
-    print(_listOfUndernutrition);
     List<double> nutritionList = [0.0, 0.0, 0.0, 0.0, 0.0];
     List<double> underNutritionList = [0.0, 0.0, 0.0, 0.0, 0.0];
     List<int> nutritionalCounter = [0, 0, 0, 0, 0];
@@ -143,7 +211,6 @@ class ChartsController extends SimpleNotifier {
     List ages = await _sheetsRepository.get(8);
     List comunitys = await _sheetsRepository.get(6);
     List nutritions = await _sheetsRepository.get(12);
-    print(nutritions);
     List weights = await _sheetsRepository.get(9);
     for (int i = 0; i < comunitys.length; i++) {
       if (comunitys[i] == _comunity) {

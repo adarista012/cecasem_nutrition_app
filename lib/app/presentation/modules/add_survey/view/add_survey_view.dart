@@ -11,31 +11,31 @@ class AddSurveyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: myAppBar(
-        AppConstants.headerSurvey,
-      ),
-      body: Center(
-        child: Consumer(
-          builder: (_, ref, __) {
-            final controller = ref.watch(
-              addSurveyProvider,
-            );
-            return Form(
-              child: Padding(
-                padding: const EdgeInsets.all(
-                  8.0,
-                ),
-                child: GestureDetector(
-                  onTap: () => FocusScope.of(context).unfocus(),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: AppColors.white,
+        appBar: myAppBar(
+          AppConstants.headerSurvey,
+        ),
+        body: Center(
+          child: Consumer(
+            builder: (_, ref, __) {
+              final controller = ref.watch(
+                addSurveyProvider,
+              );
+              return Form(
+                child: Padding(
+                  padding: const EdgeInsets.all(
+                    8.0,
+                  ),
                   child: MyForm(
                     controller: controller,
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

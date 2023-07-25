@@ -70,7 +70,7 @@ class AppConstants {
   static const String titleWeight = "Peso";
   static const String titleHeigth = "Talla";
   static const String titleDiagnosis = "Diagnóstico";
-  static const String titleDesnutrition = "Desnutrición";
+  static const String titleUnNutrition = "Desnutrición";
   static const String titleTotal = "Total";
 
   //Alerts
@@ -83,7 +83,7 @@ class AppConstants {
     AppConstants.titleWeight,
     AppConstants.titleHeigth,
     AppConstants.titleDiagnosis,
-    AppConstants.titleDesnutrition,
+    AppConstants.titleUnNutrition,
     AppConstants.titleTotal,
   ];
 

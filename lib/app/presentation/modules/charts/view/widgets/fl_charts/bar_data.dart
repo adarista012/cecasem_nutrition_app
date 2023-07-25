@@ -17,7 +17,7 @@ BarTouchData barTouchData(Color color) => BarTouchData(
             '${rod.toY.toStringAsFixed(2)} kg',
             TextStyle(
               color: color,
-              fontSize: 12,
+              fontSize: 10,
             ),
           );
         },

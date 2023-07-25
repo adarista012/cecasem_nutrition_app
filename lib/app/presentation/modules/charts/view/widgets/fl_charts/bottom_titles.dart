@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 Widget bottomTitles(double value, TitleMeta meta) {
   final style = TextStyle(
     color: AppColors.blue,
-    fontSize: 12,
+    fontSize: 11,
+    fontWeight: FontWeight.bold,
   );
   String text;
   switch (value.toInt()) {

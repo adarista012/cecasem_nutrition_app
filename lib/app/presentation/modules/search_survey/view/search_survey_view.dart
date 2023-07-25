@@ -13,31 +13,34 @@ class SearchSurveyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: myAppBar(AppConstants.searcher),
-      body: Consumer(
-        builder: (_, ref, __) {
-          final controller = ref.watch(searchSurveyProvider);
-          return Column(
-            children: [
-              Flexible(
-                flex: 1,
-                fit: FlexFit.tight,
-                child: SearchTextField(
-                  controller: controller,
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: AppColors.white,
+        appBar: myAppBar(AppConstants.searcher),
+        body: Consumer(
+          builder: (_, ref, __) {
+            final controller = ref.watch(searchSurveyProvider);
+            return Column(
+              children: [
+                Flexible(
+                  flex: 1,
+                  fit: FlexFit.tight,
+                  child: SearchTextField(
+                    controller: controller,
+                  ),
                 ),
-              ),
-              Flexible(
-                flex: 7,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListSearch(controller: controller),
-                ),
-              )
-            ],
-          );
-        },
+                Flexible(
+                  flex: 7,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListSearch(controller: controller),
+                  ),
+                )
+              ],
+            );
+          },
+        ),
       ),
     );
   }
