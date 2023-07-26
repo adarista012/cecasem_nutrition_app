@@ -1,6 +1,7 @@
 import 'package:cecasem_nutricion_app/app/presentation/modules/splash/controller/splash_controller.dart';
 import 'package:cecasem_nutricion_app/app/presentation/modules/splash/controller/splash_provider.dart';
 import 'package:cecasem_nutricion_app/app/presentation/modules/splash/utils/logo_container.dart';
+import 'package:cecasem_nutricion_app/app/presentation/modules/splash/utils/org_logo_container.dart';
 import 'package:cecasem_nutricion_app/app/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu/ui.dart';
@@ -28,7 +29,20 @@ class SplashView extends StatelessWidget {
           }
         },
         builder: (_, __) {
-          return logoContainer(width);
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Container(),
+              ),
+              Flexible(
+                child: logoContainer(width),
+              ),
+              Flexible(
+                child: orgLogoContainer(width),
+              ),
+            ],
+          );
         },
       ),
     );

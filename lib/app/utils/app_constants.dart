@@ -54,6 +54,7 @@ class AppConstants {
   static String passwordMustBe =
       'La contraseña debe tener más de cinco caracteres';
   static String logoAssetRoute = 'images/logo.png';
+  static String logoOrgAssetRoute = 'images/org.png';
   static String error = 'Error';
   static const String ok = 'Ok';
 // routes
