@@ -1,13 +1,12 @@
 import 'package:cecasem_nutricion_app/app/presentation/modules/charts/controller/charts_controller.dart';
-import 'package:cecasem_nutricion_app/app/presentation/modules/charts/view/widgets/chart_pie_data.dart';
+import 'package:cecasem_nutricion_app/app/presentation/modules/charts/view/widgets/charts/pie_chart_total.dart';
 import 'package:cecasem_nutricion_app/app/presentation/modules/charts/view/widgets/container_chart.dart';
 import 'package:cecasem_nutricion_app/app/presentation/modules/charts/view/widgets/dropdown_container.dart';
-import 'package:cecasem_nutricion_app/app/presentation/modules/charts/view/widgets/fl_charts/touch_data_total.dart';
+import 'package:cecasem_nutricion_app/app/presentation/modules/charts/view/widgets/footers/footer_total.dart';
 import 'package:cecasem_nutricion_app/app/presentation/modules/charts/view/widgets/subtitle_chart.dart';
 import 'package:cecasem_nutricion_app/app/presentation/modules/charts/view/widgets/title_chart.dart';
 import 'package:cecasem_nutricion_app/app/utils/app_colors.dart';
 import 'package:cecasem_nutricion_app/app/utils/app_constants.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class TotalChart extends StatelessWidget {
@@ -68,49 +67,9 @@ class TotalChart extends StatelessWidget {
                           children: [
                             containerChart(
                               context,
-                              PieChart(
-                                PieChartData(
-                                  pieTouchData: PieTouchData(
-                                      enabled: true,
-                                      touchCallback: touchDataTotal),
-                                  sectionsSpace: 3.2,
-                                  centerSpaceRadius: 0,
-                                  sections: showingSections(
-                                    controller.totalChart!,
-                                  ),
-                                ),
-                              ),
+                              PieChartTotal(controller: controller),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                top: 16.0,
-                                left: 8.0,
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      chartPieData(
-                                          ' 0-2 años', AppColors.mainColor),
-                                      chartPieData(
-                                          ' 3-5 años', AppColors.amber),
-                                      chartPieData(' 6-8 años', AppColors.grey),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8),
-                                    child: Row(
-                                      children: [
-                                        chartPieData(
-                                            ' 9-10 años', AppColors.red),
-                                        chartPieData(
-                                            ' 11-12 años', AppColors.blue),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
+                            const FooterTotal(),
                           ],
                         )
                   : const CircularProgressIndicator(),

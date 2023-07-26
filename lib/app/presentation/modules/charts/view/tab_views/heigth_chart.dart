@@ -1,19 +1,13 @@
 import 'package:cecasem_nutricion_app/app/presentation/modules/charts/controller/charts_controller.dart';
-import 'package:cecasem_nutricion_app/app/presentation/modules/charts/controller/charts_provider.dart';
+import 'package:cecasem_nutricion_app/app/presentation/modules/charts/view/widgets/charts/bar_chart_heigth.dart';
 import 'package:cecasem_nutricion_app/app/presentation/modules/charts/view/widgets/container_chart.dart';
 import 'package:cecasem_nutricion_app/app/presentation/modules/charts/view/widgets/dropdown_container.dart';
-
-import 'package:cecasem_nutricion_app/app/presentation/modules/charts/view/widgets/fl_charts/bar_chart.dart';
-import 'package:cecasem_nutricion_app/app/presentation/modules/charts/view/widgets/fl_charts/bar_data.dart';
-import 'package:cecasem_nutricion_app/app/presentation/modules/charts/view/widgets/fl_charts/border_data.dart';
 import 'package:cecasem_nutricion_app/app/presentation/modules/charts/view/widgets/fl_charts/label_bold.dart';
-import 'package:cecasem_nutricion_app/app/presentation/modules/charts/view/widgets/fl_charts/titles_data.dart';
 import 'package:cecasem_nutricion_app/app/presentation/modules/charts/view/widgets/subtitle_chart.dart';
 import 'package:cecasem_nutricion_app/app/presentation/modules/charts/view/widgets/title_chart.dart';
 
 import 'package:cecasem_nutricion_app/app/utils/app_colors.dart';
 import 'package:cecasem_nutricion_app/app/utils/app_constants.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class HeigthChart extends StatelessWidget {
@@ -76,30 +70,7 @@ class HeigthChart extends StatelessWidget {
                         children: [
                           containerChart(
                             context,
-                            BarChart(
-                              BarChartData(
-                                barTouchData: barTouchData(
-                                  AppColors.mainColor,
-                                ),
-                                titlesData: titlesData,
-                                borderData: borderData,
-                                barGroups:
-                                    barChart(chartsProvider.read.heightChart!),
-                                gridData: FlGridData(
-                                  drawHorizontalLine: true,
-                                  drawVerticalLine: false,
-                                  getDrawingHorizontalLine: (value) {
-                                    return FlLine(
-                                        color: AppColors.grey,
-                                        strokeWidth: 0.4);
-                                  },
-                                ),
-                                alignment: BarChartAlignment.spaceAround,
-                                maxY: chartsProvider.read
-                                        .maxY(controller.heightChart!) +
-                                    32,
-                              ),
-                            ),
+                            BarChartHeigth(controller: controller),
                           ),
                           labelBold('Promedio de las tallas en cm.',
                               AppColors.mainColor),
