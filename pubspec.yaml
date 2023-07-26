@@ -32,6 +32,7 @@ flutter:
 
   assets:
     - images/logo.png
+    - images/org.png
 
   #   - images/a_dot_ham.jpeg
 
