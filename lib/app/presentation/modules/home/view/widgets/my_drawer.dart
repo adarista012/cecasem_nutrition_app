@@ -20,6 +20,13 @@ class MyDrawer extends StatelessWidget {
         child: Column(
           children: [
             Expanded(child: Container()),
+            Padding(
+              padding: const EdgeInsets.all(64.0),
+              child: Image.asset(
+                AppConstants.logoOrgAssetRoute,
+                // width: 56,
+              ),
+            ),
             MaterialButton(
               color: AppColors.white,
               minWidth: double.infinity,

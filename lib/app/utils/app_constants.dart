@@ -4,7 +4,9 @@ class AppConstants {
   static const String kNameToTheApp = 'Cecasem Nutrición';
   static const String kFirebasefirestoreCollection = 'surveys';
   static const String kGoogleSheetsCredentials = SheetsCredentials.credential;
-
+  static const String kLogoLabelFirst =
+      'CENTRO DE CAPACITACIÓN Y SERVICIO PARA LA ';
+  static const String kLogoLabelSecond = 'INTEGRACIÓN DE LA MUJER';
   static const String kNameGoogleSheetsData = 'data';
   //
   static const String kLabelDate = 'Date';
@@ -55,6 +57,8 @@ class AppConstants {
       'La contraseña debe tener más de cinco caracteres';
   static String logoAssetRoute = 'images/logo.png';
   static String logoOrgAssetRoute = 'images/org.png';
+  static String logoHomeAssetRoute = 'images/home_logo.png';
+  static String welcome = 'Bienvenido';
   static String error = 'Error';
   static const String ok = 'Ok';
 // routes

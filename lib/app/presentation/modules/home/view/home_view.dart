@@ -19,8 +19,8 @@ class HomeView extends StatelessWidget {
         final controller = ref.watch(homeProvider);
         return Scaffold(
           backgroundColor: AppColors.white,
-          drawer: MyDrawer(controller: controller),
           appBar: myAppBar(),
+          endDrawer: MyDrawer(controller: controller),
           body: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -37,7 +37,7 @@ class HomeView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Bienvenido',
+                        AppConstants.welcome,
                         style: TextStyle(
                             color: AppColors.blue,
                             fontSize: 36.0,
@@ -63,11 +63,9 @@ class HomeView extends StatelessWidget {
                   child: Column(
                     children: [
                       MyButton(
-                        function: () {
-                          router.pushNamed(
-                            AppConstants.routeAddSurvey,
-                          );
-                        },
+                        function: () => router.pushNamed(
+                          AppConstants.routeAddSurvey,
+                        ),
                         string: AppConstants.add,
                         icon: Icons.add_circle_outline,
                       ),
@@ -75,11 +73,9 @@ class HomeView extends StatelessWidget {
                         height: 8.0,
                       ),
                       MyButton(
-                        function: () {
-                          router.pushNamed(
-                            AppConstants.routeCharts,
-                          );
-                        },
+                        function: () => router.pushNamed(
+                          AppConstants.routeCharts,
+                        ),
                         string: AppConstants.headerCharts,
                         icon: Icons.bar_chart_rounded,
                       ),
@@ -87,11 +83,9 @@ class HomeView extends StatelessWidget {
                         height: 8.0,
                       ),
                       MyButton(
-                        function: () {
-                          router.pushNamed(
-                            AppConstants.routeSearchSurvey,
-                          );
-                        },
+                        function: () => router.pushNamed(
+                          AppConstants.routeSearchSurvey,
+                        ),
                         string: AppConstants.search,
                         icon: Icons.search,
                       ),

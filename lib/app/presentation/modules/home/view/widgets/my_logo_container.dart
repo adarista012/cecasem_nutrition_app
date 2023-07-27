@@ -11,10 +11,36 @@ class MyLogoContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       flex: 1,
-      child: Container(
-        padding: const EdgeInsets.all(32.0),
-        color: AppColors.white,
-        child: Image.asset(AppConstants.logoAssetRoute),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            color: AppColors.white,
+            child: Image.asset(AppConstants.logoHomeAssetRoute),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                AppConstants.kLogoLabelFirst,
+                style: TextStyle(
+                  color: AppColors.mainColor,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 8,
+                ),
+              ),
+              Text(
+                AppConstants.kLogoLabelSecond,
+                style: TextStyle(
+                  color: AppColors.blue,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 8,
+                ),
+              )
+            ],
+          )
+        ],
       ),
     );
   }
